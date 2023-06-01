@@ -16,12 +16,19 @@ pipeline{
                 }
             }
         }
-        stage('Quality Gate Status'){
-            steps{
-                script{
-                    waitForQualityGate abortPipeline: false, credentialsId: 'cicd3'
-                }
-            }
-        }
+        //stage('Quality Gate Status'){
+        //    steps{
+        //        script{
+        //            waitForQualityGate abortPipeline: false, credentialsId: 'cicd3'
+        //       }
+        //    }
+        //}
+        //stage('docker Build and Push to Nexus Repo'){
+         //   steps{
+         //       script{
+
+         //       }
+         //   }
+        //}
     }
 }
