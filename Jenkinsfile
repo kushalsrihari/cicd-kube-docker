@@ -47,9 +47,25 @@ pipeline{
             steps{
                 script{
                     dir('kubernetes/myapp') {
+                        withEnv(['DATREE_TOKEN= e7584138a0-0556-7w00-y352486154654a1'])
                         sh 'helm datree test .'
 
                     }
+                }
+            }
+        }
+        stage('Pushing the helm chart to repo'){
+            steps{
+                script{
+                     withCredentials([string(credentialsId: 'nexus-pass', variable: 'nexus_pass')]){
+                        dir('kubernetes/myapp') {
+                            sh '''
+                            helmversion=$(helm show chart myapp | grep version | cut -d: -f 2 | tr -d ' ')
+                            tar -czvf myapp-${helmversion}.tgz myapp/
+                            curl -u admin:$nexus_pass http://3.90.0.1:8081/repository/helm-repo/ --upload-file myapp-${helmversion}.tgz -v
+                            '''
+                        }
+                     }
                 }
             }
         }
